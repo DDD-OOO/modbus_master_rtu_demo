@@ -20,6 +20,7 @@ int main() {
 
     modbus_set_slave(ctx, 1);
 
+    modbus_set_debug(ctx, true);
     // 打开串口
     if (modbus_connect(ctx) == -1) {
         std::cerr << "Connection failed: " << modbus_strerror(errno) << "\n";
