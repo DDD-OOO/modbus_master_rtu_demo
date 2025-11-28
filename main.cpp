@@ -5,7 +5,7 @@
 #include <thread>
 
 int main() {
-    const char* DEVICE = "/dev/ttyUSB0";
+    const char* DEVICE = "/dev/ttyUSB4";
 
     modbus_t* ctx = modbus_new_rtu(DEVICE, 9600, 'N', 8, 1);
     if (ctx == nullptr) {
