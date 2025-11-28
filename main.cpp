@@ -63,9 +63,15 @@ int main() {
     while (true) {
         uint16_t tab_reg[10] = {0};
 
-        print_now("[TX]");
-        int rc = modbus_read_registers(ctx, 1, 10, tab_reg);
-        print_now("[RX]");
+        auto start = std::chrono::steady_clock::now();
+        int rc = modbus_read_registers(ctx, 1, 50, tab_reg);
+        auto end = std::chrono::steady_clock::now();
+
+        auto cost = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        end - start).count();
+
+        std::cout << "modbus_read_registers cost = " << cost << " ms\n";
+
 
         if (rc == -1) {
             std::cerr << "Read error: " << modbus_strerror(errno) << std::endl;
