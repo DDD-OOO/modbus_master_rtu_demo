@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.22)
 project(modbus_master_rtu_demo)
 
 set(CMAKE_CXX_STANDARD 20)
