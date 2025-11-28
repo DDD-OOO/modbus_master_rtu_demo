@@ -32,25 +32,19 @@ int main() {
 
     // 设置超时
     struct timeval timeout;
-    timeout.tv_sec = 3;
-    timeout.tv_usec = 0;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 500;
     modbus_set_response_timeout(ctx, timeout.tv_sec, timeout.tv_usec);
 
     while (true) {
         uint16_t tab_reg[10] = {0};
 
-        int rc = modbus_read_registers(ctx,
-                                       1,     // 起始地址 = 0x0001
-                                       10,    // 数量
-                                       tab_reg);
+        int rc = modbus_read_registers(ctx, 1, 10, tab_reg);
 
         if (rc == -1) {
             std::cerr << "Read error: " << modbus_strerror(errno) << std::endl;
         } else {
             std::cout << "Read success: ";
-            for (int i = 0; i < 10; ++i) {
-                std::cout << tab_reg[i] << " ";
-            }
             std::cout << std::endl;
         }
 
