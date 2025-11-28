@@ -4,7 +4,6 @@ project(modbus_master_rtu_demo)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(modbus_master_rtu_demo main.cpp
-        connections/Connection.cpp
 )
 
 find_package(PkgConfig REQUIRED)

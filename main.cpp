@@ -1,27 +1,21 @@
 #include <iostream>
 #include <ostream>
 #include <bits/this_thread_sleep.h>
-#include "connections/RtuConnection.h"
 #include <modbus.h>
 #include <thread>
 
-using namespace ems::modbus;
-using namespace ems::modbus::master;
-
 int main() {
-    const char* DEVICE = "/dev/com4";
+    const char* DEVICE = "/dev/ttyUSB0";
 
     modbus_t* ctx = modbus_new_rtu(DEVICE, 9600, 'N', 8, 1);
     if (ctx == nullptr) {
-        std::cerr << "Unable to create libmodbus context\n";
         return -1;
     }
-
 
     modbus_set_slave(ctx, 1);
 
     modbus_set_debug(ctx, true);
-    // 打开串口
+
     if (modbus_connect(ctx) == -1) {
         std::cerr << "Connection failed: " << modbus_strerror(errno) << "\n";
         modbus_free(ctx);
@@ -30,7 +24,7 @@ int main() {
 
     std::cout << "Modbus RTU Connected!" << std::endl;
 
-    // 设置超时
+
     struct timeval timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = 500;
@@ -43,11 +37,7 @@ int main() {
 
         if (rc == -1) {
             std::cerr << "Read error: " << modbus_strerror(errno) << std::endl;
-        } else {
-            std::cout << "Read success: ";
-            std::cout << std::endl;
         }
-
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
