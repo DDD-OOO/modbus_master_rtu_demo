@@ -4,8 +4,38 @@
 #include <modbus.h>
 #include <thread>
 
+#include <chrono>
+#include <iomanip>
+#include <sstream>
+
+void print_now(const std::string& prefix = "")
+{
+    using namespace std::chrono;
+
+    auto now = system_clock::now();
+    auto now_time = system_clock::to_time_t(now);
+
+    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+
+    std::tm tm_buf{};
+#ifdef _WIN32
+    localtime_s(&tm_buf, &now_time);
+#else
+    localtime_r(&now_time, &tm_buf);
+#endif
+
+    std::stringstream ss;
+    ss << std::put_time(&tm_buf, "%H:%M:%S")
+       << "." << std::setw(3) << std::setfill('0') << ms.count();
+
+    if (!prefix.empty())
+        std::cout << prefix;
+
+    std::cout << ss.str() << std::endl;
+}
+
 int main() {
-    const char* DEVICE = "/dev/ttyUSB4";
+    const char* DEVICE = "/dev/com2";
 
     modbus_t* ctx = modbus_new_rtu(DEVICE, 9600, 'N', 8, 1);
     if (ctx == nullptr) {
@@ -33,7 +63,9 @@ int main() {
     while (true) {
         uint16_t tab_reg[10] = {0};
 
+        print_now("[TX]");
         int rc = modbus_read_registers(ctx, 1, 10, tab_reg);
+        print_now("[RX]");
 
         if (rc == -1) {
             std::cerr << "Read error: " << modbus_strerror(errno) << std::endl;
