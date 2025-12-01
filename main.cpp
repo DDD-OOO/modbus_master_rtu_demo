@@ -8,32 +8,6 @@
 #include <iomanip>
 #include <sstream>
 
-void print_now(const std::string& prefix = "")
-{
-    using namespace std::chrono;
-
-    auto now = system_clock::now();
-    auto now_time = system_clock::to_time_t(now);
-
-    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
-
-    std::tm tm_buf{};
-#ifdef _WIN32
-    localtime_s(&tm_buf, &now_time);
-#else
-    localtime_r(&now_time, &tm_buf);
-#endif
-
-    std::stringstream ss;
-    ss << std::put_time(&tm_buf, "%H:%M:%S")
-       << "." << std::setw(3) << std::setfill('0') << ms.count();
-
-    if (!prefix.empty())
-        std::cout << prefix;
-
-    std::cout << ss.str() << std::endl;
-}
-
 int main() {
     const char* DEVICE = "/dev/com2";
 
