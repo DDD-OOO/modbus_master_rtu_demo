@@ -35,15 +35,15 @@ int main() {
     modbus_set_response_timeout(ctx, timeout.tv_sec, timeout.tv_usec);
 
     while (true) {
-        uint16_t tab_reg[10] = {0};
+        uint16_t tab_reg[50] = {0};
 
         auto start = std::chrono::steady_clock::now();
         int rc = modbus_read_registers(ctx, 1, 50, tab_reg);
         auto end = std::chrono::steady_clock::now();
 
-        auto cost = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        auto cost = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-        std::cout << "modbus_read_registers cost = " << cost << " ms\n";
+        std::cout << "modbus_read_registers cost = " << cost << "\n";
 
 
         if (rc == -1) {
